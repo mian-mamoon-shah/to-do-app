@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .todo-container {
+            max-width: 400px;
+            margin: 20px auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .todo-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .todo-item input[type="checkbox"] {
+            margin-right: 10px;
+        }
+        .todo-item input[type="text"] {
+            flex: 1;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .btn {
+            padding: 5px 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="todo-container">
+        <h2>add</h2>
+        <form id="todo-form">
+            <div class="todo-item">
+                <input type="checkbox" id="check-all">
+                <input type="text" id="todo-input" placeholder="Add new ">
+            </div>
+            <button type="submit" class="btn">Add </button>
+        </form>
+        <ul id="todo-list"></ul>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('todo-form');
+            const todoInput = document.getElementById('todo-input');
+            const todoList = document.getElementById('todo-list');
+            const checkAll = document.getElementById('check-all');
+
+            // Add todo
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const todoText = todoInput.value.trim();
+                if (todoText !== '') {
+                    const todoItem = createTodoItem(todoText);
+                    todoList.appendChild(todoItem);
+                    todoInput.value = '';
+                }
+            });
+
+            // Toggle todo completion
+            todoList.addEventListener('change', function(e) {
+                if (e.target.type === 'checkbox') {
+                    const todoItem = e.target.parentElement;
+                    todoItem.classList.toggle('completed');
+                }
+            });
+
+            // Toggle all todos completion
+            checkAll.addEventListener('change', function() {
+                const todos = document.querySelectorAll('.todo-item');
+                todos.forEach(todoItem => {
+                    todoItem.classList.toggle('completed', checkAll.checked);
+                    todoItem.querySelector('input[type="checkbox"]').checked = checkAll.checked;
+                });
+            });
+
+            // Function to create todo item
+            function createTodoItem(text) {
+                const todoItem = document.createElement('li');
+                todoItem.className = 'todo-item';
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                const todoText = document.createElement('span');
+                todoText.textContent = text;
+                const deleteBtn = document.createElement('button');
+                deleteBtn.textContent = 'Delete';
+                deleteBtn.className = 'btn';
+                deleteBtn.addEventListener('click', function() {
+                    todoItem.remove();
+                });
+                todoItem.appendChild(checkbox);
+                todoItem.appendChild(todoText);
+                todoItem.appendChild(deleteBtn);
+                return todoItem;
+            }
+        });
+    </script>
+</body>
+</html>
